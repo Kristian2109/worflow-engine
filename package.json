@@ -1,0 +1,20 @@
+{
+  "name": "workflow-engine",
+  "version": "1.0.0",
+  "description": "Exervice project for making simple workflows",
+  "main": "dist/app.js",
+  "scripts": {
+    "test": "npm jest",
+    "build": "tsc",
+    "start": "node dist/app.js"
+  },
+  "author": "Kristian Petrov",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.1.0"
+  }
+}
