@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
     "target": "es6",                          // Specify ECMAScript target version: 'ES5', 'ES6'/ 'ES2015', etc.
-    "module": "commonjs",                     // Specify module code generation: 'commonjs', 'amd', 'es6', 'es2015', 'none'
+    "module": "NodeNext",                       // Specify module code generation: 'commonjs', 'amd', 'es6', 'es2015', 'none'
     "outDir": "./dist",                       // Redirect output structure to the directory
     "rootDir": "./src",                       // Specify the root directory of input files
     "strict": true,                           // Enable all strict type-checking options
     "esModuleInterop": true,                  // Enables emit interoperability between CommonJS and ES Modules via creation of `__importStar` and `__importDefault` helpers
     "skipLibCheck": true,                     // Skip type checking of all declaration files (*.d.ts)
     "forceConsistentCasingInFileNames": true, // Disallow inconsistently-cased references to the same file
-    "sourceMap": true
+    "sourceMap": true,
+    "moduleResolution": "Node16"
   },
   "include": [
     "src"
