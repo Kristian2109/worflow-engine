@@ -6,7 +6,7 @@ export default class WorkflowEngine {
     private workflowDefinitionRepository: WorkflowDefinitionRepository,
   ) {}
 
-  public executeWorkflow(workflowId: UUID): { workflowExecutionId: UUID } {
+  public async executeWorkflow(workflowId: UUID): Promise<{ workflowExecutionId: UUID }> {
     return {
       workflowExecutionId: workflowId
     };
