@@ -1,3 +1,3 @@
-export default abstract class Step {
-  abstract execute(): Promise<void>;
+export default abstract class Operation {
+  abstract execute(stepInput: string, prevStepOutput: string): Promise<any>;
 }

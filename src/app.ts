@@ -9,7 +9,6 @@ import requestHandler from './controllers/requestHandler';
 import { workflowIdQueryValidator } from './controllers/validators/engineControllerValidators';
 import WorkflowExecutionRepository from './engine/repositories/WorkflowExecutionRepository';
 import WorkflowExecutionMockRepository from './repositories/WorkflowExecutionMockRepository';
-import StepExecutor from './engine/services/StepExecutor';
 dotenv.config();
 
 const app = express();
@@ -20,8 +19,7 @@ app.use(json());
 
 const definitionRepository: WorkflowDefinitionRepository = new WorkflowDefinitionMockRepository();
 const executionRepository: WorkflowExecutionRepository = new WorkflowExecutionMockRepository();
-const stepExecutor = new StepExecutor();
-const engine = new WorkflowEngine(definitionRepository, executionRepository, stepExecutor);
+const engine = new WorkflowEngine(definitionRepository, executionRepository);
 const controller = new EngineController(engine);
 
 app.get('/', (req: Request, res: Response) => {

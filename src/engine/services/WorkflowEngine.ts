@@ -1,8 +1,6 @@
 import { UUID } from "crypto";
 import WorkflowDefinitionRepository from "../repositories/WorkflowDefinitionRepository";
 import WorkflowExecutionRepository from "../repositories/WorkflowExecutionRepository";
-import StepExecutor from "./StepExecutor";
-import StepExecution from "../entities/StepExecution";
 import WorkflowExecution from "../entities/WorkflowExecution";
 
 export default class WorkflowEngine {
@@ -11,7 +9,6 @@ export default class WorkflowEngine {
   constructor(
     private workflowDefinitionRepository: WorkflowDefinitionRepository,
     private workflowExecutionRepository: WorkflowExecutionRepository,
-    private stepExecutor: StepExecutor,
   ) {}
 
   public async startWorkflowExecution(workflowId: UUID): Promise<{ workflowExecutionId: UUID }> {
@@ -30,9 +27,9 @@ export default class WorkflowEngine {
     let previousStepResult = undefined;
 
     for (let i = 0; i < steps.length; i++) {
-      await this.stepExecutor.executeStep(steps[i], previousStepResult);
-      previousStepResult = workflowExecution.steps[i].result;
-      workflowExecution = await this.workflowExecutionRepository.updateExecution(workflowExecution);
+      await steps[i].run(previousStepResult);
+      previousStepResult = steps[i].result;
+      await this.workflowExecutionRepository.updateExecution(workflowExecution);
     }
   }
 }

@@ -6,5 +6,6 @@ export default class WorkflowDefinitionStep {
     public id: UUID,
     public operation: Operation,
     public stepOrder: number,
+    public data: any,
   ) {}
 }
