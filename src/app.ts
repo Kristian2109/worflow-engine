@@ -26,7 +26,7 @@ app.get('/', (req: Request, res: Response) => {
 app.post(
   '/engine/execute/:workflowId', 
   requestHandler(workflowIdQueryValidator),
-  controller.executeWorkflow
+  controller.executeWorkflow.bind(controller)
 )
 
 app.listen(port, () => {
