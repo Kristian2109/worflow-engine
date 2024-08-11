@@ -6,7 +6,7 @@ export default class StepExecutor {
 
   constructor(
     public id: UUID,
-    public step: WorkflowDefinitionStep,
+    public definition: WorkflowDefinitionStep,
     public result: any,
     public beginAt: number,
     public duration: number,
@@ -15,7 +15,7 @@ export default class StepExecutor {
 
   public async run(prevData: any) {
     this.beginAt = Date.now();
-    this.result = await this.step.operation.execute(this.step.data, prevData);
+    this.result = await this.definition.operation.execute(this.definition.data, prevData);
     this.duration = Date.now() - this.beginAt;
     this.isCompleted = true;
   }

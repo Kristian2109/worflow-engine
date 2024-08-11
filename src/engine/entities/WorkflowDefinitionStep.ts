@@ -1,5 +1,6 @@
 import { UUID } from "crypto";
 import Operation from "./Operation";
+import Condition from "../conditions/Condition";
 
 export default class WorkflowDefinitionStep {
   constructor (
@@ -7,5 +8,6 @@ export default class WorkflowDefinitionStep {
     public operation: Operation,
     public data: any,
     public nextSteps: UUID[],
+    public condition?: Condition,
   ) {}
 }
