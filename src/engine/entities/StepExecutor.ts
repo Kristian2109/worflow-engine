@@ -1,8 +1,8 @@
 import { UUID } from "crypto";
 import WorkflowDefinitionStep from "./WorkflowDefinitionStep";
 
-export default class StepExecution {
-  public nextSteps: StepExecution[] = [];
+export default class StepExecutor {
+  public nextSteps: StepExecutor[] = [];
 
   constructor(
     public id: UUID,
