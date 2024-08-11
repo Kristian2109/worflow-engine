@@ -37,7 +37,7 @@ export default class WorkflowExecutor {
 
   public async execute() {
     this.firstStepExecutions.forEach(firstStep => {
-      firstStep.execute(undefined);
+      firstStep.execute();
     });
   }
 }

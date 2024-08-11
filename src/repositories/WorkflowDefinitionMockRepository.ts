@@ -14,7 +14,7 @@ export default class WorkflowDefinitionMockRepository implements WorkflowDefinit
           id: '5283733e-ca70-42d3-8095-e62ecde4565d',
           operation: new WriteOnConsole(),
           data: "First Step",
-          nextSteps: ['5283733e-ca70-42d3-8095-e62ecde4565a', '5283733e-ca70-42d3-8095-e62ecde4565c']
+          nextSteps: ['5283733e-ca70-42d3-8095-e62ecde4565a', '5283733e-ca70-42d3-8095-e62ecde4565c'],
         },
       ],
       [

@@ -3,4 +3,5 @@ export enum ExecutionStatus {
   Executing,
   Succeeded,
   Failed,
+  ConditionNotMet,
 };

@@ -19,27 +19,34 @@ export default class StepExecutor {
     this.conditionFactory = new ConditionParser();
   }
 
-  public async run(prevData: any) {
+  public async execute() {
+    await this.executeOperation();
+    for (const childStep of this.childSteps) {
+      childStep.execute();
+    }
+  }
+
+  private async executeOperation() {
+    this.status = ExecutionStatus.Executing;
+    const parentResults = this.getParentStepResults();
     this.beginAt = Date.now();
-    this.result = await this.definition.operation.execute(this.definition.data, prevData);
+    this.result = await this.definition.operation.execute(this.definition.data, parentResults);
     this.duration = Date.now() - this.beginAt;
     this.status = ExecutionStatus.Succeeded;
   }
 
-  public async execute(prevData: any) {
-    if (this.checkCondition(prevData)) {
-      await this.run(prevData);
-      for (const childStep of this.childSteps) {
-        childStep.execute(this.result);
-      }
-    }
-  }
+  // private checkCondition() {
+  //   if (this.definition.conditionExpression) {
+  //     const condition = this.conditionFactory.parse(this.getParentStepResults(), this.definition.conditionExpression);
+  //     return condition.evaluate();
+  //   }
+  //   return true;
+  // }
 
-  private checkCondition(prevData: any) {
-    if (this.definition.conditionExpression) {
-      const condition = this.conditionFactory.parse(prevData, this.definition.conditionExpression);
-      return condition.evaluate();
-    }
-    return true;
+  private getParentStepResults() {
+    return this.parentSteps.map(step => ({
+      result: step.result,
+      parentId: step.id,
+    }));
   }
 }
