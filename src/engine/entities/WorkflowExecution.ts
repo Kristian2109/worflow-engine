@@ -3,18 +3,31 @@ import WorkflowDefinition from "./WorkflowDefinition";
 import StepExecution from "./StepExecution";
 
 export default class WorkflowExecution {
-  private steps: StepExecution[];
+  public executionSteps: Map<UUID, StepExecution>;
 
   constructor(
     public id: UUID,
-    public workflowDefinition: WorkflowDefinition
+    public workflowDefinition: WorkflowDefinition,
   ) {
-    this.steps = workflowDefinition.steps.map(step => {
-      return new StepExecution(randomUUID(), step, undefined, 0, 0, false);
-    })
+    this.executionSteps = new Map<UUID, StepExecution>;
+    workflowDefinition.steps.forEach(step => {
+      const stepExecutionId = randomUUID();
+      this.executionSteps.set(stepExecutionId, new StepExecution(stepExecutionId, step, undefined, 0, 0, false));
+    });
   }
 
-  getStepsInExecutionOrder() {
-    return this.steps.sort((a, b) => a.step.stepOrder - b.step.stepOrder);
+  public getFirstStep() {
+    const firstStep = Array.from(this.executionSteps.values()).find(step => step.step.id === this.workflowDefinition.firstStepId);
+    if (!firstStep) {
+      throw new Error("No such step");
+    }
+    return firstStep;
+  }
+
+  public *generateNextSteps() {
+    for (const executionSteps of this.executionSteps) {
+      const nextStepdIds = executionSteps[1].step.nextSteps;
+      yield nextStepdIds.map(id =>  Array.from(this.executionSteps.values()).find(st =>st.step.id === id));
+    }
   }
 }

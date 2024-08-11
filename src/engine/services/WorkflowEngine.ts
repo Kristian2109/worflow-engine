@@ -2,6 +2,7 @@ import { UUID } from "crypto";
 import WorkflowDefinitionRepository from "../repositories/WorkflowDefinitionRepository";
 import WorkflowExecutionRepository from "../repositories/WorkflowExecutionRepository";
 import WorkflowExecution from "../entities/WorkflowExecution";
+import StepExecution from "../entities/StepExecution";
 
 export default class WorkflowEngine {
   static readonly EXECUTION_TIMEOUT = 40 * 1000;
@@ -13,23 +14,30 @@ export default class WorkflowEngine {
 
   public async startWorkflowExecution(workflowId: UUID): Promise<{ workflowExecutionId: UUID }> {
     const workflowDefinition = await this.workflowDefinitionRepository.getWorkflowDefinitionById(workflowId);
-    const workflowExecution = await this.workflowExecutionRepository.createExecution(workflowDefinition);
+    const executionId = await this.workflowExecutionRepository.createExecution(workflowDefinition);
 
-    this.executeWorkflow(workflowExecution);
+    this.executeWorkflow(executionId);
 
     return {
-      workflowExecutionId: workflowExecution.id,
+      workflowExecutionId: executionId,
     }
   }
 
-  public async executeWorkflow(workflowExecution: WorkflowExecution) {
-    const steps = workflowExecution.getStepsInExecutionOrder();
-    let previousStepResult = undefined;
+  public async executeWorkflow(workflowExecutionId: UUID) {
+    const workflowExecution = await this.workflowExecutionRepository.getExecutionById(workflowExecutionId);
+    const firstStep = workflowExecution.getFirstStep();
+    this.executeStep(workflowExecution, firstStep, undefined);
+  }
 
-    for (let i = 0; i < steps.length; i++) {
-      await steps[i].run(previousStepResult);
-      previousStepResult = steps[i].result;
-      await this.workflowExecutionRepository.updateExecution(workflowExecution);
+  public async executeStep(workflowExecution: WorkflowExecution, step: StepExecution, previousStepResult: any) {
+    await step.run(previousStepResult);
+
+    for (const childStepId of step.step.nextSteps) {
+      const childStep = Array.from(workflowExecution.executionSteps.values()).find(st =>st.step.id === childStepId);
+      if (!childStep) {
+        throw new Error(`No step found with id ${childStepId}`);
+      }
+      this.executeStep(workflowExecution, childStep, step.result);
     }
   }
 }

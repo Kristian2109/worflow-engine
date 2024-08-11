@@ -3,7 +3,7 @@ import WorkflowExecution from "../entities/WorkflowExecution";
 import WorkflowDefinition from "../entities/WorkflowDefinition";
 
 export default interface WorkflowExecutionRepository {
-  createExecution(definition: WorkflowDefinition): Promise<WorkflowExecution>;
+  createExecution(definition: WorkflowDefinition): Promise<UUID>;
   updateExecution(execution: WorkflowExecution): Promise<WorkflowExecution>;
   getExecutionById(id: UUID): Promise<WorkflowExecution>;
 }
