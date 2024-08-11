@@ -1,10 +1,12 @@
 import { UUID } from "crypto";
 import WorkflowDefinitionStep from "../definitions/WorkflowDefinitionStep";
-import ConditionFactory from "../conditions/ConditionFactory";
+import ConditionParser from "../conditions/ConditionParser";
+import { ExecutionStatus } from "./ExecutionStatus";
 
 export default class StepExecutor {
-  public nextSteps: StepExecutor[] = [];
-  private conditionFactory: ConditionFactory;
+  public childSteps: StepExecutor[] = [];
+  public parentSteps: StepExecutor[] = [];
+  private conditionFactory: ConditionParser;
 
   constructor(
     public id: UUID,
@@ -12,29 +14,32 @@ export default class StepExecutor {
     public result: any,
     public beginAt: number,
     public duration: number,
-    public isCompleted: boolean,
+    public status: ExecutionStatus = ExecutionStatus.Pending,
   ) {
-    this.conditionFactory = new ConditionFactory();
+    this.conditionFactory = new ConditionParser();
   }
 
   public async run(prevData: any) {
     this.beginAt = Date.now();
     this.result = await this.definition.operation.execute(this.definition.data, prevData);
     this.duration = Date.now() - this.beginAt;
-    this.isCompleted = true;
+    this.status = ExecutionStatus.Succeeded;
   }
 
   public async execute(prevData: any) {
-    if (this.definition.conditionExpression) {
-      const condition = this.conditionFactory.createCondition(prevData, this.definition.conditionExpression);
-      if (!condition.evaluate()) {
-        console.log(`Step ${this.definition.id} didn't passed because of condition!`)
-        return;
+    if (this.checkCondition(prevData)) {
+      await this.run(prevData);
+      for (const childStep of this.childSteps) {
+        childStep.execute(this.result);
       }
     }
-    await this.run(prevData);
-    for (const nextStep of this.nextSteps) {
-      nextStep.execute(this.result);
+  }
+
+  private checkCondition(prevData: any) {
+    if (this.definition.conditionExpression) {
+      const condition = this.conditionFactory.parse(prevData, this.definition.conditionExpression);
+      return condition.evaluate();
     }
+    return true;
   }
 }

@@ -13,7 +13,7 @@ export default class WorkflowExecutor {
   ) {
     workflowDefinition.firstStepIds.forEach((id) => {
       const firstDefintionStep = workflowDefinition.getStepById(id);
-      const firstExecutionStep = new StepExecutor(randomUUID(), firstDefintionStep, undefined, 0, 0, false);
+      const firstExecutionStep = new StepExecutor(randomUUID(), firstDefintionStep, undefined, 0, 0);
       this.firstStepExecutions.push(firstExecutionStep);
       this.executionStepsByDefinitionId.set(id, firstExecutionStep);
       this.initChildren(workflowDefinition.getStepById(id), firstExecutionStep);
@@ -26,11 +26,12 @@ export default class WorkflowExecutor {
       if (!childExecution) {
         const childExecutionId = randomUUID();
         const childDefinition = this.workflowDefinition.steps.get(definitionChildId)!;
-        childExecution = new StepExecutor(childExecutionId, childDefinition, undefined, 0, 0, false);
+        childExecution = new StepExecutor(childExecutionId, childDefinition, undefined, 0, 0);
         this.executionStepsByDefinitionId.set(definitionChildId, childExecution);
         this.initChildren(childDefinition, childExecution);
       }
-      parentExecution.nextSteps.push(childExecution)
+      childExecution.parentSteps.push(parentExecution);
+      parentExecution.childSteps.push(childExecution)
     }
   }
 
