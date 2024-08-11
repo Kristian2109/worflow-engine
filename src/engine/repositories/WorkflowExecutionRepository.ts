@@ -1,9 +1,9 @@
 import { UUID } from "crypto";
-import WorkflowExecution from "../entities/WorkflowExecution";
+import WorkflowExecutor from "../entities/WorkflowExecutor";
 import WorkflowDefinition from "../entities/WorkflowDefinition";
 
 export default interface WorkflowExecutionRepository {
-  createExecution(definition: WorkflowDefinition): Promise<UUID>;
-  updateExecution(execution: WorkflowExecution): Promise<WorkflowExecution>;
-  getExecutionById(id: UUID): Promise<WorkflowExecution>;
+  createExecution(definition: WorkflowDefinition): Promise<WorkflowExecutor>;
+  updateExecution(execution: WorkflowExecutor): Promise<WorkflowExecutor>;
+  getExecutionById(id: UUID): Promise<WorkflowExecutor>;
 }

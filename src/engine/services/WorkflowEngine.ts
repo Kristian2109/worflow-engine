@@ -1,7 +1,7 @@
 import { UUID } from "crypto";
 import WorkflowDefinitionRepository from "../repositories/WorkflowDefinitionRepository";
 import WorkflowExecutionRepository from "../repositories/WorkflowExecutionRepository";
-import WorkflowExecution from "../entities/WorkflowExecution";
+import WorkflowExecutor from "../entities/WorkflowExecutor";
 import StepExecution from "../entities/StepExecution";
 
 export default class WorkflowEngine {
@@ -14,19 +14,12 @@ export default class WorkflowEngine {
 
   public async startWorkflowExecution(workflowId: UUID): Promise<{ workflowExecutionId: UUID }> {
     const workflowDefinition = await this.workflowDefinitionRepository.getWorkflowDefinitionById(workflowId);
-    const executionId = await this.workflowExecutionRepository.createExecution(workflowDefinition);
+    const workflowExecution = await this.workflowExecutionRepository.createExecution(workflowDefinition);
 
-    this.executeWorkflow(executionId);
+    workflowExecution.execute();
 
     return {
-      workflowExecutionId: executionId,
+      workflowExecutionId: workflowExecution.id,
     }
-  }
-
-  public async executeWorkflow(workflowExecutionId: UUID) {
-    const workflowExecution = await this.workflowExecutionRepository.getExecutionById(workflowExecutionId);
-    workflowExecution.firstStepExecutions.forEach(firstStep => {
-      firstStep.execute(undefined);
-    });
   }
 }

@@ -3,7 +3,7 @@ import WorkflowDefinition from "./WorkflowDefinition";
 import StepExecution from "./StepExecution";
 import WorkflowDefinitionStep from "./WorkflowDefinitionStep";
 
-export default class WorkflowExecution {
+export default class WorkflowExecutor {
   public executionStepsByDefinitionId: Map<UUID, StepExecution> = new Map();
   public firstStepExecutions: StepExecution[] = [];
 
@@ -32,5 +32,11 @@ export default class WorkflowExecution {
       }
       parentExecution.nextSteps.push(childExecution)
     }
+  }
+
+  public async execute() {
+    this.firstStepExecutions.forEach(firstStep => {
+      firstStep.execute(undefined);
+    });
   }
 }

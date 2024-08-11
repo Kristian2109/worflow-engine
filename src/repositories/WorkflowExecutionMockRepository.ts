@@ -1,21 +1,21 @@
 import { randomUUID, UUID } from "crypto";
 import { v4 } from 'uuid'
 import WorkflowDefinition from "../engine/entities/WorkflowDefinition";
-import WorkflowExecution from "../engine/entities/WorkflowExecution";
+import WorkflowExecutor from "../engine/entities/WorkflowExecutor";
 import WorkflowExecutionRepository from "../engine/repositories/WorkflowExecutionRepository";
 
 export default class WorkflowExecutionMockRepository implements WorkflowExecutionRepository {
-  private executions: Map<UUID, WorkflowExecution> = new Map;
-  async createExecution(definition: WorkflowDefinition): Promise<UUID> {
-    const id = randomUUID();
-    this.executions.set(id, new WorkflowExecution(id, definition));
-    return id;
+  private executions: Map<UUID, WorkflowExecutor> = new Map;
+  async createExecution(definition: WorkflowDefinition): Promise<WorkflowExecutor> {
+    const newExecution = new WorkflowExecutor(randomUUID(), definition)
+    this.executions.set(newExecution.id, newExecution);
+    return newExecution;
   }
-  async updateExecution(execution: WorkflowExecution): Promise<WorkflowExecution> {
+  async updateExecution(execution: WorkflowExecutor): Promise<WorkflowExecutor> {
     this.executions.set(execution.id, execution);
     return execution;
   }
-  async getExecutionById(id: UUID): Promise<WorkflowExecution> {
+  async getExecutionById(id: UUID): Promise<WorkflowExecutor> {
     const execution = this.executions.get(id);
     if (!execution) {
       throw new Error("No such execution!");
