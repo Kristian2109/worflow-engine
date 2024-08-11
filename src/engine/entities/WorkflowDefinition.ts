@@ -8,4 +8,8 @@ export default class WorkflowDefinition {
     public steps: Map<UUID, WorkflowDefinitionStep>,
     public firstStepId: UUID,
   ) {}
+
+  public getFirstStep() {
+    return this.steps.get(this.firstStepId)!;
+  }
 }

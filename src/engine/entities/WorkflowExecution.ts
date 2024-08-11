@@ -1,6 +1,7 @@
 import { randomUUID, UUID } from "crypto";
 import WorkflowDefinition from "./WorkflowDefinition";
 import StepExecution from "./StepExecution";
+import WorkflowDefinitionStep from "./WorkflowDefinitionStep";
 
 export default class WorkflowExecution {
   public executionSteps: Map<UUID, StepExecution>;
@@ -10,10 +11,34 @@ export default class WorkflowExecution {
     public workflowDefinition: WorkflowDefinition,
   ) {
     this.executionSteps = new Map<UUID, StepExecution>;
-    workflowDefinition.steps.forEach(step => {
-      const stepExecutionId = randomUUID();
-      this.executionSteps.set(stepExecutionId, new StepExecution(stepExecutionId, step, undefined, 0, 0, false));
-    });
+    const firstStepExecution = new StepExecution(randomUUID(), workflowDefinition.getFirstStep(), undefined, 0, 0, false);
+    this.initChildren(workflowDefinition.getFirstStep(), firstStepExecution);
+
+    // workflowDefinition.steps.forEach(step => {
+    //   const stepExecutionId = randomUUID();
+    //   this.executionSteps.set(stepExecutionId, new StepExecution(stepExecutionId, step, undefined, 0, 0, false));
+    //   nextDefinitionStepIdsPerExecutionId.set(stepExecutionId, step.nextSteps);
+    // });
+
+    // nextDefinitionStepIdsPerExecutionId.forEach((definitionStepIds, executionId) => {
+    //   const executionStep = this.executionSteps.get(executionId);
+    //   definitionStepIds.forEach(definitionId => {
+    //     const nextExecutionStep = Array.from(this.executionSteps.values()).find(execStep => execStep.step.id === definitionId)
+    //     executionStep?.nextSteps.push(nextExecutionStep!);
+    //   });
+    // });
+  }
+
+  public initChildren(parentDefinition: WorkflowDefinitionStep, parentExecution: StepExecution) {
+    for (const childId of parentDefinition.nextSteps) {
+      const childExecutionId = randomUUID();
+      const childDefinition = this.workflowDefinition.steps.get(childId)!;
+      const childExecution = new StepExecution(childExecutionId, childDefinition, undefined, 0, 0, false);
+      this.executionSteps.set(childExecutionId, childExecution);
+
+      this.initChildren(childDefinition, childExecution);
+      parentExecution.nextSteps.push(childExecution)
+    }
   }
 
   public getFirstStep() {
