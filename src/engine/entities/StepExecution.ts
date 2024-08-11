@@ -19,4 +19,11 @@ export default class StepExecution {
     this.duration = Date.now() - this.beginAt;
     this.isCompleted = true;
   }
+
+  public async execute(prevData: any) {
+    await this.run(prevData);
+    for (const nextStep of this.nextSteps) {
+      nextStep.execute(this.result);
+    }
+  }
 }
