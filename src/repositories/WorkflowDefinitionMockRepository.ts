@@ -1,8 +1,8 @@
 import { UUID } from "crypto";
 import WorkflowDefinitionRepository from "../engine/repositories/WorkflowDefinitionRepository";
-import WorkflowDefinition from "../engine/entities/WorkflowDefinition";
+import WorkflowDefinition from "../engine/definitions/WorkflowDefinition";
 import WriteOnConsole from "../engine/operations/WriteOnConsole";
-import WorkflowDefinitionStep from "../engine/entities/WorkflowDefinitionStep";
+import WorkflowDefinitionStep from "../engine/definitions/WorkflowDefinitionStep";
 import WriteOnConsoleWithDelay from "../engine/operations/WriteOnConsoleWithDelay";
 
 export default class WorkflowDefinitionMockRepository implements WorkflowDefinitionRepository {

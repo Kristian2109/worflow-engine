@@ -1,4 +1,4 @@
-import Operation from "../entities/Operation";
+import Operation from "./Operation";
 import { sleep } from "../utils/testing";
 
 export default class WriteOnConsoleWithDelay extends Operation {

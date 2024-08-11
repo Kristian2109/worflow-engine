@@ -1,7 +1,7 @@
 import { randomUUID, UUID } from "crypto";
-import WorkflowDefinition from "./WorkflowDefinition";
+import WorkflowDefinition from "../definitions/WorkflowDefinition";
 import StepExecutor from "./StepExecutor";
-import WorkflowDefinitionStep from "./WorkflowDefinitionStep";
+import WorkflowDefinitionStep from "../definitions/WorkflowDefinitionStep";
 
 export default class WorkflowExecutor {
   public executionStepsByDefinitionId: Map<UUID, StepExecutor> = new Map();

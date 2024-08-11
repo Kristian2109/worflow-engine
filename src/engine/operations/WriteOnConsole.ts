@@ -1,4 +1,4 @@
-import Operation from "../entities/Operation";
+import Operation from "./Operation";
 
 export default class WriteOnConsole extends Operation {
   public static readonly NAME = 'Write on Console';
