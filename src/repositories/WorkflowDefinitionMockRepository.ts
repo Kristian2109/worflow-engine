@@ -31,8 +31,18 @@ export default class WorkflowDefinitionMockRepository implements WorkflowDefinit
         {
           id: '5283733e-ca70-42d3-8095-e62ecde4565c',
           operation: new WriteOnConsole(),
+          data: "Third Step is really very very long",
+          nextSteps: ['5283733e-ca70-42d3-8095-e62ecde4565l'],
+        }
+      ],
+      [
+        '5283733e-ca70-42d3-8095-e62ecde4565l',
+        {
+          id: '5283733e-ca70-42d3-8095-e62ecde4565l',
+          operation: new WriteOnConsole(),
           data: "Third Step",
-          nextSteps: []
+          nextSteps: [],
+          conditionExpression: '30'
         }
       ]
     ]);

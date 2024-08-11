@@ -4,7 +4,7 @@ export default class SimpleCondition extends Condition {
   constructor(
     private leftSide: number, 
     private operator: string, 
-    private rightSide: number
+    private rightSide: number,
   ) {
     super();
   }
