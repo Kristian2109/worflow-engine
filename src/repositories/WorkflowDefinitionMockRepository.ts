@@ -3,6 +3,7 @@ import WorkflowDefinitionRepository from "../engine/repositories/WorkflowDefinit
 import WorkflowDefinition from "../engine/entities/WorkflowDefinition";
 import WriteOnConsole from "../engine/operations/WriteOnConsole";
 import WorkflowDefinitionStep from "../engine/entities/WorkflowDefinitionStep";
+import WriteOnConsoleWithDelay from "../engine/operations/WriteOnConsoleWithDelay";
 
 export default class WorkflowDefinitionMockRepository implements WorkflowDefinitionRepository {
   getWorkflowDefinitionById(id: UUID): Promise<WorkflowDefinition> {
@@ -11,29 +12,36 @@ export default class WorkflowDefinitionMockRepository implements WorkflowDefinit
         '5283733e-ca70-42d3-8095-e62ecde4565d',
         {
           id: '5283733e-ca70-42d3-8095-e62ecde4565d',
-          stepOrder: 1,
           operation: new WriteOnConsole(),
           data: "First Step",
-          nextSteps: ['5283733e-ca70-42d3-8095-e62ecde4565a']
+          nextSteps: ['5283733e-ca70-42d3-8095-e62ecde4565a', '5283733e-ca70-42d3-8095-e62ecde4565c']
         },
       ],
       [
         '5283733e-ca70-42d3-8095-e62ecde4565a',
         {
           id: '5283733e-ca70-42d3-8095-e62ecde4565a',
-          stepOrder: 2,
-          operation: new WriteOnConsole(),
+          operation: new WriteOnConsoleWithDelay(),
           data: "Second Step",
           nextSteps: []
         }
       ],
+      [
+        '5283733e-ca70-42d3-8095-e62ecde4565c',
+        {
+          id: '5283733e-ca70-42d3-8095-e62ecde4565c',
+          operation: new WriteOnConsole(),
+          data: "Third Step",
+          nextSteps: []
+        }
+      ]
     ]);
 
     return Promise.resolve(new WorkflowDefinition(
       '5283733e-ca70-42d3-8095-e62ecde4565d',
       'Workflow',
       steps,
-      '5283733e-ca70-42d3-8095-e62ecde4565d')
+      ['5283733e-ca70-42d3-8095-e62ecde4565d'])
     );
   }
 }

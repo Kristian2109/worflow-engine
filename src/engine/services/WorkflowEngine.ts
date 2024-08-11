@@ -25,15 +25,16 @@ export default class WorkflowEngine {
 
   public async executeWorkflow(workflowExecutionId: UUID) {
     const workflowExecution = await this.workflowExecutionRepository.getExecutionById(workflowExecutionId);
-    const firstStep = workflowExecution.getFirstStep();
-    this.executeStep(workflowExecution, firstStep, undefined);
+    workflowExecution.firstStepExecutions.forEach(firstStep => {
+      this.executeStep(workflowExecution, firstStep, undefined);
+    });
   }
 
   public async executeStep(workflowExecution: WorkflowExecution, step: StepExecution, previousStepResult: any) {
     await step.run(previousStepResult);
 
     for (const childStepId of step.step.nextSteps) {
-      const childStep = Array.from(workflowExecution.executionSteps.values()).find(st =>st.step.id === childStepId);
+      const childStep = workflowExecution.executionStepsByDefinitionId.get(childStepId);
       if (!childStep) {
         throw new Error(`No step found with id ${childStepId}`);
       }

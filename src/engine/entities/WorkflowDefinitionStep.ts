@@ -5,7 +5,6 @@ export default class WorkflowDefinitionStep {
   constructor (
     public id: UUID,
     public operation: Operation,
-    public stepOrder: number,
     public data: any,
     public nextSteps: UUID[],
   ) {}

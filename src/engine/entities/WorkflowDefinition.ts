@@ -6,10 +6,13 @@ export default class WorkflowDefinition {
     public id: UUID,
     public name: string,
     public steps: Map<UUID, WorkflowDefinitionStep>,
-    public firstStepId: UUID,
+    public firstStepIds: UUID[],
   ) {}
 
-  public getFirstStep() {
-    return this.steps.get(this.firstStepId)!;
+  public getStepById(id: UUID) {
+    if (!this.steps.has(id)) {
+      throw new Error(`No step with id ${id} in workflow with id ${id}`);
+    }
+    return this.steps.get(id)!;
   }
 }
