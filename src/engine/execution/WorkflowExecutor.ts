@@ -11,12 +11,12 @@ export default class WorkflowExecutor {
     public id: UUID,
     public workflowDefinition: WorkflowDefinition,
   ) {
-    workflowDefinition.firstStepIds.forEach((id) => {
-      const firstDefintionStep = workflowDefinition.getStepById(id);
+    workflowDefinition.firstStepIds.forEach((definitionStepId) => {
+      const firstDefintionStep = workflowDefinition.getStepById(definitionStepId);
       const firstExecutionStep = new StepExecutor(randomUUID(), firstDefintionStep, undefined, 0, 0);
       this.firstStepExecutions.push(firstExecutionStep);
-      this.executionStepsByDefinitionId.set(id, firstExecutionStep);
-      this.initChildren(workflowDefinition.getStepById(id), firstExecutionStep);
+      this.executionStepsByDefinitionId.set(definitionStepId, firstExecutionStep);
+      this.initChildren(workflowDefinition.getStepById(definitionStepId), firstExecutionStep);
     });
   }
 
@@ -24,20 +24,33 @@ export default class WorkflowExecutor {
     for (const definitionChildId of parentDefinition.nextSteps) {
       let childExecution = this.executionStepsByDefinitionId.get(definitionChildId);
       if (!childExecution) {
-        const childExecutionId = randomUUID();
         const childDefinition = this.workflowDefinition.steps.get(definitionChildId)!;
-        childExecution = new StepExecutor(childExecutionId, childDefinition, undefined, 0, 0);
+        childExecution = new StepExecutor(randomUUID(), childDefinition, undefined, 0, 0);
         this.executionStepsByDefinitionId.set(definitionChildId, childExecution);
+        const childInputStepIds = childDefinition.operation.getInputStepIds();
+        childInputStepIds.forEach(executionId => {
+          const inputDefinition = this.executionStepsByDefinitionId.get(executionId);
+          if (!inputDefinition) {
+            throw new Error("Invalid input definition id!");
+          }
+          childDefinition.operation.addStepExecutor(executionId, inputDefinition);
+        });
         this.initChildren(childDefinition, childExecution);
       }
       childExecution.parentSteps.push(parentExecution);
-      parentExecution.childSteps.push(childExecution)
+      parentExecution.childSteps.push(childExecution);
     }
   }
 
   public async execute() {
-    this.firstStepExecutions.forEach(firstStep => {
+    const promises = this.firstStepExecutions.map(firstStep => {
       firstStep.execute();
     });
+
+    try {
+      await Promise.all(promises);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

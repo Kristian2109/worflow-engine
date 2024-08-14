@@ -4,6 +4,7 @@ import WorkflowDefinition from "../engine/definitions/WorkflowDefinition";
 import WriteOnConsole from "../engine/operations/WriteOnConsole";
 import WorkflowDefinitionStep from "../engine/definitions/WorkflowDefinitionStep";
 import WriteOnConsoleWithDelay from "../engine/operations/WriteOnConsoleWithDelay";
+import MakeAnObject from "../engine/operations/MakeAnObject";
 
 export default class WorkflowDefinitionMockRepository implements WorkflowDefinitionRepository {
   getWorkflowDefinitionById(id: UUID): Promise<WorkflowDefinition> {
@@ -12,8 +13,7 @@ export default class WorkflowDefinitionMockRepository implements WorkflowDefinit
         '5283733e-ca70-42d3-8095-e62ecde4565d',
         {
           id: '5283733e-ca70-42d3-8095-e62ecde4565d',
-          operation: new WriteOnConsole(),
-          data: "First Step",
+          operation: new WriteOnConsole({ payload: "First Step" }),
           nextSteps: ['5283733e-ca70-42d3-8095-e62ecde4565a', '5283733e-ca70-42d3-8095-e62ecde4565c'],
         },
       ],
@@ -21,8 +21,10 @@ export default class WorkflowDefinitionMockRepository implements WorkflowDefinit
         '5283733e-ca70-42d3-8095-e62ecde4565a',
         {
           id: '5283733e-ca70-42d3-8095-e62ecde4565a',
-          operation: new WriteOnConsoleWithDelay(),
-          data: "Second Step",
+          operation: new WriteOnConsoleWithDelay({
+            payload: "5283733e-ca70-42d3-8095-e62ecde4565d", 
+            stepDefinitionId: "5283733e-ca70-42d3-8095-e62ecde4565d",
+          }),
           nextSteps: []
         }
       ],
@@ -30,19 +32,22 @@ export default class WorkflowDefinitionMockRepository implements WorkflowDefinit
         '5283733e-ca70-42d3-8095-e62ecde4565c',
         {
           id: '5283733e-ca70-42d3-8095-e62ecde4565c',
-          operation: new WriteOnConsole(),
-          data: "Third Step is really very very long",
+          operation: new WriteOnConsole({ payload: "Third Step" }),
           nextSteps: ['5283733e-ca70-42d3-8095-e62ecde4565l'],
         }
       ],
       [
-        '5283733e-ca70-42d3-8095-e62ecde4565l',
+        '5283733e-ca70-42d3-8095-e62ecde4565l', 
         {
           id: '5283733e-ca70-42d3-8095-e62ecde4565l',
-          operation: new WriteOnConsole(),
-          data: "Third Step",
-          nextSteps: [],
-          conditionExpression: '30'
+          operation: new MakeAnObject({
+            object: '{ hey: 5283733e-ca70-42d3-8095-e62ecde4565c }',
+            operationInputs: [{
+              payload: '5283733e-ca70-42d3-8095-e62ecde4565c',
+              stepDefinitionId: '5283733e-ca70-42d3-8095-e62ecde4565c'
+            }],
+          }),
+          nextSteps: []
         }
       ]
     ]);

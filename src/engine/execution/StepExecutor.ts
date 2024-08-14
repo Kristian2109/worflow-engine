@@ -28,9 +28,8 @@ export default class StepExecutor {
 
   private async executeOperation() {
     this.status = ExecutionStatus.Executing;
-    const parentResults = this.getParentStepResults();
     this.beginAt = Date.now();
-    this.result = await this.definition.operation.execute(this.definition.data, parentResults);
+    this.result = await this.definition.operation.execute();
     this.duration = Date.now() - this.beginAt;
     this.status = ExecutionStatus.Succeeded;
   }
@@ -42,11 +41,4 @@ export default class StepExecutor {
   //   }
   //   return true;
   // }
-
-  private getParentStepResults() {
-    return this.parentSteps.map(step => ({
-      result: step.result,
-      parentId: step.id,
-    }));
-  }
 }
