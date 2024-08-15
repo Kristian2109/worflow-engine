@@ -13,6 +13,7 @@ export default class MakeAnObject extends Operation{
     super(input.operationInputs);
     this.object = input.object;
   }
+
   execute() {
     let result = this.object;
     this.inputs.forEach(input => {

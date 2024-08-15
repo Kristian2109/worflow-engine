@@ -25,7 +25,7 @@ export default class WorkflowDefinitionMockRepository implements WorkflowDefinit
             payload: "5283733e-ca70-42d3-8095-e62ecde4565d", 
             stepDefinitionId: "5283733e-ca70-42d3-8095-e62ecde4565d",
           }),
-          nextSteps: []
+          nextSteps: ['5283733e-ca70-42d3-8095-e62ecde4565e']
         }
       ],
       [
@@ -34,6 +34,20 @@ export default class WorkflowDefinitionMockRepository implements WorkflowDefinit
           id: '5283733e-ca70-42d3-8095-e62ecde4565c',
           operation: new WriteOnConsole({ payload: "Third Step" }),
           nextSteps: ['5283733e-ca70-42d3-8095-e62ecde4565l'],
+        }
+      ],
+      [
+        '5283733e-ca70-42d3-8095-e62ecde4565e', 
+        {
+          id: '5283733e-ca70-42d3-8095-e62ecde4565e',
+          operation: new MakeAnObject({
+            object: '{ hey: 5283733e-ca70-42d3-8095-e62ecde4565d }',
+            operationInputs: [{
+              payload: '5283733e-ca70-42d3-8095-e62ecde4565d',
+              stepDefinitionId: '5283733e-ca70-42d3-8095-e62ecde4565d'
+            }],
+          }),
+          nextSteps: []
         }
       ],
       [

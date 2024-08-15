@@ -2,6 +2,7 @@ import { UUID } from "crypto";
 import WorkflowDefinitionStep from "../definitions/WorkflowDefinitionStep";
 import ConditionParser from "../conditions/ConditionParser";
 import { ExecutionStatus } from "./ExecutionStatus";
+import { sleep } from "../utils/testing";
 
 export default class StepExecutor {
   public childSteps: StepExecutor[] = [];
@@ -20,6 +21,7 @@ export default class StepExecutor {
   }
 
   public async execute() {
+    await this.waitForParentsToComplete();
     await this.executeOperation();
     for (const childStep of this.childSteps) {
       childStep.execute();
@@ -32,6 +34,12 @@ export default class StepExecutor {
     this.result = await this.definition.operation.execute();
     this.duration = Date.now() - this.beginAt;
     this.status = ExecutionStatus.Succeeded;
+  }
+
+  private async waitForParentsToComplete() {
+    while (this.parentSteps.some(step => step.status !== ExecutionStatus.Succeeded)) {
+      await sleep(100);
+    }
   }
 
   // private checkCondition() {
