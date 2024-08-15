@@ -10,6 +10,7 @@ import { workflowIdQueryValidator } from './controllers/validators/engineControl
 import WorkflowExecutionRepository from './engine/repositories/WorkflowExecutionRepository';
 import WorkflowExecutionMockRepository from './repositories/WorkflowExecutionMockRepository';
 import errorHandler from './controllers/errorHandler';
+import errorLogger from './controllers/errorLogger';
 dotenv.config();
 
 const app = express();
@@ -34,6 +35,7 @@ app.post(
 )
 
 app.use(errorHandler);
+app.use(errorLogger);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
