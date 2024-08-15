@@ -5,8 +5,8 @@ export default class WorkflowDefinition {
   constructor(
     public id: UUID,
     public name: string,
-    public steps: Map<UUID, WorkflowDefinitionStep>,
-    public firstStepIds: UUID[],
+    private steps: Map<UUID, WorkflowDefinitionStep>,
+    private firstStepIds: UUID[],
   ) {}
 
   public getStepById(id: UUID) {
@@ -14,5 +14,9 @@ export default class WorkflowDefinition {
       throw new Error(`No step with id ${id} in workflow with id ${id}`);
     }
     return this.steps.get(id)!;
+  }
+
+  public get getFirstStepIds() {
+    return this.firstStepIds;
   }
 }

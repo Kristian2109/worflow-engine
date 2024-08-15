@@ -7,7 +7,7 @@ export type OperationInput =  { payload: string; stepDefinitionId?: UUID}
 export default abstract class Operation {
   abstract NAME: string;
   protected inputs: OperationInput[];
-  private inputStepExecutors: Map<UUID, StepExecutor> = new Map();
+  private inputStepExecutors?: Map<UUID, StepExecutor>;
   constructor(inputs: OperationInput[]) {
     this.inputs = inputs;
   }
@@ -19,12 +19,12 @@ export default abstract class Operation {
       .map(input => input.stepDefinitionId!);
   }
 
-  public addStepExecutor(stepDefinitionId: UUID, stepExecutor: StepExecutor) {
-    this.inputStepExecutors.set(stepDefinitionId, stepExecutor);
+  public addReferenceToSteps(stepsByDefinitionId: Map<UUID, StepExecutor>) {
+    this.inputStepExecutors = stepsByDefinitionId;
   }
 
   protected getPayloadForInput(input: OperationInput): string {
-    if (!input.stepDefinitionId) {
+    if (!input.stepDefinitionId || !this.inputStepExecutors) {
       return input.payload;
     }
     const stepInputExecution = this.inputStepExecutors.get(input.stepDefinitionId);

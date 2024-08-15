@@ -1,7 +1,6 @@
 import { randomUUID, UUID } from "crypto";
 import WorkflowDefinition from "../definitions/WorkflowDefinition";
 import StepExecutor from "./StepExecutor";
-import WorkflowDefinitionStep from "../definitions/WorkflowDefinitionStep";
 
 export default class WorkflowExecutor {
   public executionStepsByDefinitionId: Map<UUID, StepExecutor> = new Map();
@@ -9,37 +8,33 @@ export default class WorkflowExecutor {
 
   constructor(
     public id: UUID,
-    public workflowDefinition: WorkflowDefinition,
+    private workflowDefinition: WorkflowDefinition,
   ) {
-    workflowDefinition.firstStepIds.forEach((definitionStepId) => {
-      const firstDefintionStep = workflowDefinition.getStepById(definitionStepId);
-      const firstExecutionStep = new StepExecutor(randomUUID(), firstDefintionStep, undefined, 0, 0);
+    this.workflowDefinition.getFirstStepIds.forEach((definitionStepId) => {
+      const firstExecutionStep = this.buildStepExecution(definitionStepId);
       this.firstStepExecutions.push(firstExecutionStep);
       this.executionStepsByDefinitionId.set(definitionStepId, firstExecutionStep);
-      this.initChildren(workflowDefinition.getStepById(definitionStepId), firstExecutionStep);
+      this.initChildren(firstExecutionStep);
     });
   }
 
-  public initChildren(parentDefinition: WorkflowDefinitionStep, parentExecution: StepExecutor) {
-    for (const definitionChildId of parentDefinition.nextSteps) {
+  private initChildren(parentExecution: StepExecutor) {
+    for (const definitionChildId of parentExecution.definition.nextSteps) {
       let childExecution = this.executionStepsByDefinitionId.get(definitionChildId);
       if (!childExecution) {
-        const childDefinition = this.workflowDefinition.steps.get(definitionChildId)!;
-        childExecution = new StepExecutor(randomUUID(), childDefinition, undefined, 0, 0);
+        childExecution = this.buildStepExecution(definitionChildId);
         this.executionStepsByDefinitionId.set(definitionChildId, childExecution);
-        const childInputStepIds = childDefinition.operation.getInputStepIds();
-        childInputStepIds.forEach(executionId => {
-          const inputDefinition = this.executionStepsByDefinitionId.get(executionId);
-          if (!inputDefinition) {
-            throw new Error("Invalid input definition id!");
-          }
-          childDefinition.operation.addStepExecutor(executionId, inputDefinition);
-        });
-        this.initChildren(childDefinition, childExecution);
+        this.initChildren(childExecution);
       }
       childExecution.parentSteps.push(parentExecution);
       parentExecution.childSteps.push(childExecution);
     }
+  }
+
+  private buildStepExecution(stepDefinitionId: UUID) {
+    const childDefinition = this.workflowDefinition.getStepById(stepDefinitionId)!;
+    childDefinition.operation.addReferenceToSteps(this.executionStepsByDefinitionId);
+    return new StepExecutor(randomUUID(), childDefinition, undefined, 0, 0);
   }
 
   public async execute() {

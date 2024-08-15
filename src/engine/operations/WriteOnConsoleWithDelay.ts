@@ -1,5 +1,4 @@
 import { sleep } from "../utils/testing";
-import { StepResult } from "../execution/StepResult";
 import WriteOnConsole from "./WriteOnConsole";
 
 export default class WriteOnConsoleWithDelay extends WriteOnConsole {
