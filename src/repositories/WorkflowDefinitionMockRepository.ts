@@ -5,6 +5,7 @@ import WriteOnConsole from "../engine/operations/WriteOnConsole";
 import WorkflowDefinitionStep from "../engine/definitions/WorkflowDefinitionStep";
 import WriteOnConsoleWithDelay from "../engine/operations/WriteOnConsoleWithDelay";
 import MakeAnObject from "../engine/operations/MakeAnObject";
+import ApiCall from "../engine/operations/ApiCall";
 
 export default class WorkflowDefinitionMockRepository implements WorkflowDefinitionRepository {
   getWorkflowDefinitionById(id: UUID): Promise<WorkflowDefinition> {
@@ -16,6 +17,14 @@ export default class WorkflowDefinitionMockRepository implements WorkflowDefinit
           operation: new WriteOnConsole({ payload: "First Step" }),
           nextSteps: ['5283733e-ca70-42d3-8095-e62ecde4565a', '5283733e-ca70-42d3-8095-e62ecde4565c'],
         },
+      ],
+      [ 
+        '5283733e-ca70-42d3-8095-e62ecde4565k',
+        {
+          id: '5283733e-ca70-42d3-8095-e62ecde4565k',
+          operation: new ApiCall('https://dummyjson.com/c/9b38-c60d-4435-b93b', []),
+          nextSteps: [],
+        }
       ],
       [
         '5283733e-ca70-42d3-8095-e62ecde4565a',
@@ -70,7 +79,7 @@ export default class WorkflowDefinitionMockRepository implements WorkflowDefinit
       '5283733e-ca70-42d3-8095-e62ecde4565d',
       'Workflow',
       steps,
-      ['5283733e-ca70-42d3-8095-e62ecde4565d'])
+      ['5283733e-ca70-42d3-8095-e62ecde4565d', '5283733e-ca70-42d3-8095-e62ecde4565k'])
     );
   }
 }

@@ -1,7 +1,9 @@
 import Operation, { OperationInput } from "./Operation";
+import { StringSchemaParser } from "./schemas/ResultSchema";
 
 export default class WriteOnConsole extends Operation {
   NAME = 'Write on Console';
+  private schemaParser = new StringSchemaParser();
 
   constructor(input: OperationInput) {
     super([input]);
@@ -12,5 +14,9 @@ export default class WriteOnConsole extends Operation {
     console.log(`Executing Operation ${this.NAME}`);
     console.log('Current Step Input: ', payload);
     return payload;
+  }
+
+  getNode(stepResult: string, node: string) {
+    return this.schemaParser.parse(stepResult, node);
   }
 }

@@ -1,4 +1,6 @@
 import Operation, { OperationInput } from "./Operation";
+import { JsonSchemaParser } from "./schemas/ResultSchema";
+import { StringSchema } from "./schemas/ResultSchemaTypes";
 
 type MakeAnObjectInput = {
   object: string,
@@ -8,6 +10,7 @@ type MakeAnObjectInput = {
 export default class MakeAnObject extends Operation{
   NAME = "Make An Object";
   private object: string;
+  private schemaParser = new JsonSchemaParser();
 
   constructor(input: MakeAnObjectInput) {
     super(input.operationInputs);
@@ -25,4 +28,7 @@ export default class MakeAnObject extends Operation{
     return result;
   }
 
+  getNode(stepResult: string, node: string): string {
+    return this.schemaParser.parse(stepResult, node);
+  }
 }

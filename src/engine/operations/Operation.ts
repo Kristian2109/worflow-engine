@@ -1,6 +1,5 @@
 import { UUID } from "crypto";
 import StepExecutor from "../execution/StepExecutor";
-import { get } from "lodash";
 
 export type OperationInput =  { payload: string; stepDefinitionId?: UUID}
 
@@ -8,10 +7,14 @@ export default abstract class Operation {
   abstract NAME: string;
   protected inputs: OperationInput[];
   private inputStepExecutors?: Map<UUID, StepExecutor>;
+
   constructor(inputs: OperationInput[]) {
     this.inputs = inputs;
   }
+
   abstract execute(): any;
+
+  abstract getNode(stepResult: string, node: string): string;
 
   public getInputStepIds() {
     return this.inputs
@@ -34,6 +37,6 @@ export default abstract class Operation {
     if (input.payload === stepInputExecution.definition.id) {
       return stepInputExecution.result;
     }
-    return get({ a: stepInputExecution.result }, `a.${input.payload}`);
+    return stepInputExecution.definition.operation.getNode(stepInputExecution.result, input.payload);
   }
 }

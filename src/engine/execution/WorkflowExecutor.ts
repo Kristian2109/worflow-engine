@@ -38,14 +38,6 @@ export default class WorkflowExecutor {
   }
 
   public async execute() {
-    const promises = this.firstStepExecutions.map(firstStep => {
-      firstStep.execute();
-    });
-
-    try {
-      await Promise.all(promises);
-    } catch (error) {
-      console.log(error);
-    }
+    this.firstStepExecutions.forEach(firstStep => firstStep.execute());
   }
 }
