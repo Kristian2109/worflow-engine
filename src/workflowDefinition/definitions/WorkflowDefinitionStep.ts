@@ -1,5 +1,5 @@
 import { UUID } from "crypto";
-import Operation from "../operations/Operation";
+import Operation from "../../workflowExecution/operations/Operation";
 
 export default class WorkflowDefinitionStep {
   constructor (

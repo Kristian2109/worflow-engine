@@ -1,6 +1,6 @@
-import WorkflowEngine from "../../engine/services/WorkflowEngine";
-import WorkflowDefinitionMockRepository from "../../repositories/WorkflowDefinitionMockRepository";
-import WorkflowExecutionMockRepository from "../../repositories/WorkflowExecutionMockRepository";
+import WorkflowEngine from "../../services/WorkflowEngine";
+import WorkflowDefinitionMockRepository from "../../repositories/implementations/WorkflowDefinitionMockRepository";
+import WorkflowExecutionMockRepository from "../../repositories/implementations/WorkflowExecutionMockRepository";
 
 describe('Acceptance test', () => {
   const workflowDefinitionRepo = new WorkflowDefinitionMockRepository();

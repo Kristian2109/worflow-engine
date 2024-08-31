@@ -1,6 +1,6 @@
 import { UUID } from "crypto";
-import WorkflowDefinitionRepository from "../repositories/WorkflowDefinitionRepository";
-import WorkflowExecutionRepository from "../repositories/WorkflowExecutionRepository";
+import WorkflowDefinitionRepository from "../repositories/interfaces/WorkflowDefinitionRepository";
+import WorkflowExecutionRepository from "../repositories/interfaces/WorkflowExecutionRepository";
 
 export default class WorkflowEngine {
   static readonly EXECUTION_TIMEOUT = 40 * 1000;

@@ -1,11 +1,11 @@
 import { UUID } from "crypto";
-import WorkflowDefinitionRepository from "../../../engine/repositories/WorkflowDefinitionRepository";
-import WorkflowDefinition from "../../../engine/definitions/WorkflowDefinition";
-import WriteOnConsole from "../../../engine/operations/WriteOnConsole";
-import WorkflowDefinitionStep from "../../../engine/definitions/WorkflowDefinitionStep";
-import WriteOnConsoleWithDelay from "../../../engine/operations/WriteOnConsoleWithDelay";
-import MakeAnObject from "../../../engine/operations/MakeAnObject";
-import ApiCall from "../../../engine/operations/ApiCall";
+import WorkflowDefinitionRepository from "../../../repositories/interfaces/WorkflowDefinitionRepository";
+import WorkflowDefinition from "../../../workflowDefinition/definitions/WorkflowDefinition";
+import WriteOnConsole from "../../../workflowExecution/operations/WriteOnConsole";
+import WorkflowDefinitionStep from "../../../workflowDefinition/definitions/WorkflowDefinitionStep";
+import WriteOnConsoleWithDelay from "../../../workflowExecution/operations/WriteOnConsoleWithDelay";
+import MakeAnObject from "../../../workflowExecution/operations/MakeAnObject";
+import ApiCall from "../../../workflowExecution/operations/ApiCall";
 
 export default class WorkflowDefinitionMockRepository implements WorkflowDefinitionRepository {
   getWorkflowDefinitionById(id: UUID): Promise<WorkflowDefinition> {

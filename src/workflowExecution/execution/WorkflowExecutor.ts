@@ -1,5 +1,5 @@
 import { randomUUID, UUID } from "crypto";
-import WorkflowDefinition from "../definitions/WorkflowDefinition";
+import WorkflowDefinition from "../../workflowDefinition/definitions/WorkflowDefinition";
 import StepExecutor from "./StepExecutor";
 
 export default class WorkflowExecutor {

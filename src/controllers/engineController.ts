@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import WorkflowEngine from "../engine/services/WorkflowEngine";
+import WorkflowEngine from "../services/WorkflowEngine";
 import { UUID } from "crypto";
 
 interface UUIDRequest extends Request {

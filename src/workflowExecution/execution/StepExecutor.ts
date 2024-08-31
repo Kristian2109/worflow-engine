@@ -1,5 +1,5 @@
 import { UUID } from "crypto";
-import WorkflowDefinitionStep from "../definitions/WorkflowDefinitionStep";
+import WorkflowDefinitionStep from "../../workflowDefinition/definitions/WorkflowDefinitionStep";
 import ConditionParser from "../conditions/ConditionParser";
 import { ExecutionStatus } from "./ExecutionStatus";
 
