@@ -1,4 +1,3 @@
-import { UUID } from "crypto";
 import Operation from "../operations/Operation";
 import Condition from "../conditions/Condition";
 import StepExecutionState from "../state/StepExecutionState";
@@ -11,11 +10,11 @@ export default class StepExecutor {
   public get condition(): Condition {
     return this._condition;
   }
-  public get nextStepIds(): UUID[] {
+  public get nextStepIds(): number[] {
     return this._nextStepIds;
   }
   constructor(
-    private readonly _nextStepIds: UUID[],
+    private readonly _nextStepIds: number[],
     private readonly _condition: Condition,
     private readonly _operation: Operation,
     private readonly _state: StepExecutionState,

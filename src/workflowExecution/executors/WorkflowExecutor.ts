@@ -1,45 +1,28 @@
-import { randomUUID, UUID } from "crypto";
-import WorkflowDefinition from "../../workflowDefinition/definitions/WorkflowDefinition";
 import StepExecutor from "./StepExecutor";
 import ExecutionState from "../state/ExecutionState";
+import { ExecutionStatus } from "../state/ExecutionStatus";
+import WorkflowExecutionRepository from "../../repositories/interfaces/WorkflowExecutionRepository";
 
 export default class WorkflowExecutor {
-  public executionStepsByDefinitionId: Map<UUID, StepExecutor> = new Map();
-  public firstStepExecutions: StepExecutor[] = [];
-
   constructor(
-    public id: UUID,
-    private workflowDefinition: WorkflowDefinition,
-    private state: ExecutionState,
-  ) {
-    this.workflowDefinition.getFirstStepIds.forEach((definitionStepId) => {
-      const firstExecutionStep = this.buildStepExecution(definitionStepId);
-      this.firstStepExecutions.push(firstExecutionStep);
-      this.executionStepsByDefinitionId.set(definitionStepId, firstExecutionStep);
-      this.initChildren(firstExecutionStep);
-    });
-  }
-
-  private initChildren(parentExecution: StepExecutor) {
-    for (const definitionChildId of parentExecution.definition.nextSteps) {
-      let childExecution = this.executionStepsByDefinitionId.get(definitionChildId);
-      if (!childExecution) {
-        childExecution = this.buildStepExecution(definitionChildId);
-        this.executionStepsByDefinitionId.set(definitionChildId, childExecution);
-        this.initChildren(childExecution);
-      }
-      childExecution.parentSteps.push(parentExecution);
-      parentExecution.childSteps.push(childExecution);
-    }
-  }
-
-  private buildStepExecution(stepDefinitionId: UUID) {
-    const childDefinition = this.workflowDefinition.getStepById(stepDefinitionId)!;
-    childDefinition.operation.addReferenceToSteps(this.executionStepsByDefinitionId);
-    return new StepExecutor(randomUUID(), childDefinition, undefined, 0, 0);
-  }
+    private _state: ExecutionState,
+    private _stepExecutors: StepExecutor[],
+    private _firstStepIndexes: number[],
+    private _stateRepository: WorkflowExecutionRepository,
+  ) {}
 
   public async execute() {
-    this.firstStepExecutions.forEach(firstStep => firstStep.execute());
+    this._state.status = ExecutionStatus.Executing;
+    const executionPromises = this._firstStepIndexes.map(index => this.executeStep(index));
+    await Promise.all(executionPromises);
+    this._state.status = ExecutionStatus.Succeeded;
+  }
+
+  private async executeStep(index: number) {
+    const currentStep = this._stepExecutors[index];
+    await currentStep.executeOperation();
+    for (const childIndex of currentStep.nextStepIds) {
+      this.executeStep(childIndex);
+    }
   }
 }
