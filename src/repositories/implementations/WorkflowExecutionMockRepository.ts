@@ -1,30 +1,21 @@
-import { randomUUID, UUID } from "crypto";
-import WorkflowDefinition from "../../workflowDefinition/definitions/WorkflowDefinition";
+import { UUID } from "crypto";
 import WorkflowExecutor from "../../workflowExecution/executors/WorkflowExecutor";
-import WorkflowExecutionRepository from "../interfaces/WorkflowExecutionRepository";
+import ExecutionStateRepository from "../interfaces/ExecutionStateRepository";
 import ExecutionState from "../../workflowExecution/state/ExecutionState";
-import { ExecutionStatus } from "../../workflowExecution/state/ExecutionStatus";
+import StepExecutionState from "../../workflowExecution/state/StepExecutionState";
 
-export default class WorkflowExecutionMockRepository implements WorkflowExecutionRepository {
-  private executions: Map<UUID, WorkflowExecutor> = new Map();
-  async createExecution(definition: WorkflowDefinition): Promise<WorkflowExecutor> {
-    const newExecution = new WorkflowExecutor(
-      randomUUID(), 
-      definition, 
-      new ExecutionState(randomUUID(), definition.id, new Map(), ExecutionStatus.Executing),
-    )
-    this.executions.set(newExecution.id, newExecution);
-    return newExecution;
+export default class WorkflowExecutionMockRepository implements ExecutionStateRepository {
+  updateStepState(id: UUID, step: StepExecutionState): Promise<ExecutionState> {
+    throw new Error("Method not implemented.");
   }
-  async updateExecution(execution: WorkflowExecutor): Promise<WorkflowExecutor> {
-    this.executions.set(execution.id, execution);
-    return execution;
+  create(state: ExecutionState): Promise<ExecutionState> {
+    throw new Error("Method not implemented.");
   }
-  async getExecutionById(id: UUID): Promise<WorkflowExecutor> {
-    const execution = this.executions.get(id);
-    if (!execution) {
-      throw new Error("No such execution!");
-    }
-    return execution;
+  update(state: ExecutionState): Promise<ExecutionState> {
+    throw new Error("Method not implemented.");
   }
+  getById(id: UUID): Promise<ExecutionState> {
+    throw new Error("Method not implemented.");
+  }
+  private states: Map<UUID, WorkflowExecutor> = new Map();
 }

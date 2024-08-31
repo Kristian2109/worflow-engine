@@ -7,7 +7,7 @@ import WorkflowEngine from './services/WorkflowEngine';
 import EngineController from './controllers/engineController';
 import requestHandler from './controllers/requestHandler';
 import { workflowIdQueryValidator } from './controllers/validators/engineControllerValidators';
-import WorkflowExecutionRepository from './repositories/interfaces/WorkflowExecutionRepository';
+import ExecutionStateRepository from './repositories/interfaces/ExecutionStateRepository';
 import WorkflowExecutionMockRepository from './repositories/implementations/WorkflowExecutionMockRepository';
 import errorHandler from './controllers/errorHandler';
 import errorLogger from './controllers/errorLogger';
@@ -20,7 +20,7 @@ app.use(urlencoded({ extended: true }));
 app.use(json());
 
 const definitionRepository: WorkflowDefinitionRepository = new WorkflowDefinitionMockRepository();
-const executionRepository: WorkflowExecutionRepository = new WorkflowExecutionMockRepository();
+const executionRepository: ExecutionStateRepository = new WorkflowExecutionMockRepository();
 const engine = new WorkflowEngine(definitionRepository, executionRepository);
 const controller = new EngineController(engine);
 
