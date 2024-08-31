@@ -1,6 +1,13 @@
 import { UUID } from "crypto";
+import { StepExecutionStatus } from "./StepExecutionStatus";
 
 export default class StepExecutionState {
+  public get status(): StepExecutionStatus {
+    return this._status;
+  }
+  public set status(value: StepExecutionStatus) {
+    this._status = value;
+  }
   public get operationResult(): any {
     return this._operationResult;
   }
@@ -35,5 +42,6 @@ export default class StepExecutionState {
     private _beginAt: number,
     private _duration: number,
     private _operationResult: any,
+    private _status: StepExecutionStatus,
   ) {}
 };
