@@ -3,8 +3,8 @@ import WorkflowDefinitionStep from "./WorkflowDefinitionStep";
 
 export default class WorkflowDefinition {
   constructor(
-    public id: UUID,
-    public name: string,
+    private _id: UUID,
+    private _name: string,
     private steps: Map<UUID, WorkflowDefinitionStep>,
     private firstStepIds: UUID[],
   ) {}
@@ -18,5 +18,17 @@ export default class WorkflowDefinition {
 
   public get getFirstStepIds() {
     return this.firstStepIds;
+  }
+  public get name(): string {
+    return this._name;
+  }
+  public set name(value: string) {
+    this._name = value;
+  }
+  public get id(): UUID {
+    return this._id;
+  }
+  public set id(value: UUID) {
+    this._id = value;
   }
 }
