@@ -28,7 +28,4 @@ export default class WorkflowDefinition {
   public get id(): UUID {
     return this._id;
   }
-  public set id(value: UUID) {
-    this._id = value;
-  }
 }
