@@ -1,41 +1,31 @@
 import { UUID } from "crypto";
-import WorkflowDefinitionStep from "../../workflowDefinition/definitions/WorkflowDefinitionStep";
-import ConditionParser from "../conditions/ConditionParser";
-import { ExecutionStatus } from "./ExecutionStatus";
+import Operation from "../operations/Operation";
+import Condition from "../conditions/Condition";
+import StepExecutionState from "../state/StepExecutionState";
+import { StepExecutionStatus } from "../state/StepExecutionStatus";
 
 export default class StepExecutor {
-  public childSteps: StepExecutor[] = [];
-  public parentSteps: StepExecutor[] = [];
-
+  public get state(): StepExecutionState {
+    return this._state;
+  }
+  public get condition(): Condition {
+    return this._condition;
+  }
+  public get nextStepIds(): UUID[] {
+    return this._nextStepIds;
+  }
   constructor(
-    public id: UUID,
-    public definition: WorkflowDefinitionStep,
-    public result: any,
-    public beginAt: number,
-    public duration: number,
-    public status: ExecutionStatus = ExecutionStatus.Pending,
+    private readonly _nextStepIds: UUID[],
+    private readonly _condition: Condition,
+    private readonly _operation: Operation,
+    private readonly _state: StepExecutionState,
   ) {}
 
-  public async execute() {
-    await this.executeOperation();
-    for (const childStep of this.childSteps) {
-      // To Do: Add executing based on condition and execution status
-      childStep.execute();
-    }
-  }
-
-  private async executeOperation() {
-    this.status = ExecutionStatus.Executing;
-    this.beginAt = Date.now();
-    this.result = await this.definition.operation.execute();
-    this.duration = Date.now() - this.beginAt;
-    this.status = ExecutionStatus.Succeeded;
-  }
-
-  private checkCondition() {
-    if (this.definition.conditionExpression) {
-      return false;
-    }
-    return true;
+ public async executeOperation() {
+    this._state.status = StepExecutionStatus.Executing;
+    this._state.beginAt = Date.now();
+    this._state.operationResult = await this._operation.execute();
+    this._state.duration = Date.now() - this._state.beginAt;
+    this._state.status = StepExecutionStatus.Succeeded;
   }
 }
