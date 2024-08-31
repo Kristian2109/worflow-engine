@@ -12,14 +12,13 @@ export default class WorkflowDefinitionMockRepository implements WorkflowDefinit
     const steps = new Map<UUID, WorkflowDefinitionStep>([
       [
         '5283733e-ca70-42d3-8095-e62ecde4565d',
-        {
-          id: '5283733e-ca70-42d3-8095-e62ecde4565d',
-          operation: new MakeAnObject({
+        new WorkflowDefinitionStep('5283733e-ca70-42d3-8095-e62ecde4565d', 
+          new MakeAnObject({
             object: `{}`,
             operationInputs: []
-          }),
-          nextSteps: [],
-        },
+          }), 
+          [],
+        )
       ],
     ]);
 

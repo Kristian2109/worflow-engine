@@ -12,66 +12,60 @@ export default class WorkflowDefinitionMockRepository implements WorkflowDefinit
     const steps = new Map<UUID, WorkflowDefinitionStep>([
       [
         '5283733e-ca70-42d3-8095-e62ecde4565d',
-        {
-          id: '5283733e-ca70-42d3-8095-e62ecde4565d',
-          operation: new WriteOnConsole({ payload: "First Step" }),
-          nextSteps: ['5283733e-ca70-42d3-8095-e62ecde4565a', '5283733e-ca70-42d3-8095-e62ecde4565c'],
-        },
+        new WorkflowDefinitionStep('5283733e-ca70-42d3-8095-e62ecde4565d',
+          new WriteOnConsole({ payload: "First Step" }),
+          ['5283733e-ca70-42d3-8095-e62ecde4565a', '5283733e-ca70-42d3-8095-e62ecde4565c'],
+        )
       ],
       [ 
         '5283733e-ca70-42d3-8095-e62ecde4565k',
-        {
-          id: '5283733e-ca70-42d3-8095-e62ecde4565k',
-          operation: new ApiCall('https://dummyjson.com/c/9b38-c60d-4435-b93b', []),
-          nextSteps: [],
-        }
+        new WorkflowDefinitionStep('5283733e-ca70-42d3-8095-e62ecde4565k',
+          new ApiCall('https://dummyjson.com/c/9b38-c60d-4435-b93b', []),
+          [],
+        ),
       ],
       [
         '5283733e-ca70-42d3-8095-e62ecde4565a',
-        {
-          id: '5283733e-ca70-42d3-8095-e62ecde4565a',
-          operation: new WriteOnConsoleWithDelay({
+        new WorkflowDefinitionStep('5283733e-ca70-42d3-8095-e62ecde4565a',
+          new WriteOnConsoleWithDelay({
             payload: "5283733e-ca70-42d3-8095-e62ecde4565d", 
             stepDefinitionId: "5283733e-ca70-42d3-8095-e62ecde4565d",
           }),
-          nextSteps: ['5283733e-ca70-42d3-8095-e62ecde4565e']
-        }
+          ['5283733e-ca70-42d3-8095-e62ecde4565e'],
+        ),
       ],
       [
         '5283733e-ca70-42d3-8095-e62ecde4565c',
-        {
-          id: '5283733e-ca70-42d3-8095-e62ecde4565c',
-          operation: new WriteOnConsole({ payload: "Third Step" }),
-          nextSteps: ['5283733e-ca70-42d3-8095-e62ecde4565l'],
-        }
+        new WorkflowDefinitionStep('5283733e-ca70-42d3-8095-e62ecde4565c',
+          new WriteOnConsole({ payload: "Third Step" }),
+          ['5283733e-ca70-42d3-8095-e62ecde4565l'],
+        )
       ],
       [
         '5283733e-ca70-42d3-8095-e62ecde4565e', 
-        {
-          id: '5283733e-ca70-42d3-8095-e62ecde4565e',
-          operation: new MakeAnObject({
+        new WorkflowDefinitionStep('5283733e-ca70-42d3-8095-e62ecde4565e',
+          new MakeAnObject({
             object: '{ hey: 5283733e-ca70-42d3-8095-e62ecde4565d }',
             operationInputs: [{
               payload: '5283733e-ca70-42d3-8095-e62ecde4565d',
               stepDefinitionId: '5283733e-ca70-42d3-8095-e62ecde4565d'
             }],
           }),
-          nextSteps: []
-        }
+          [],
+        ),
       ],
       [
         '5283733e-ca70-42d3-8095-e62ecde4565l', 
-        {
-          id: '5283733e-ca70-42d3-8095-e62ecde4565l',
-          operation: new MakeAnObject({
+        new WorkflowDefinitionStep('5283733e-ca70-42d3-8095-e62ecde4565l',
+          new MakeAnObject({
             object: '{ hey: 5283733e-ca70-42d3-8095-e62ecde4565c }',
             operationInputs: [{
               payload: '5283733e-ca70-42d3-8095-e62ecde4565c',
               stepDefinitionId: '5283733e-ca70-42d3-8095-e62ecde4565c'
             }],
           }),
-          nextSteps: []
-        }
+          [],
+        ),
       ]
     ]);
 
