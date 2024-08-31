@@ -1,5 +1,5 @@
 import { UUID } from "crypto";
-import WorkflowExecutor from "../../workflowExecution/execution/WorkflowExecutor";
+import WorkflowExecutor from "../../workflowExecution/executors/WorkflowExecutor";
 import WorkflowDefinition from "../../workflowDefinition/definitions/WorkflowDefinition";
 
 export default interface WorkflowExecutionRepository {

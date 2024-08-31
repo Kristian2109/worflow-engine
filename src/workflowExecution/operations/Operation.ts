@@ -1,5 +1,5 @@
 import { UUID } from "crypto";
-import StepExecutor from "../execution/StepExecutor";
+import StepExecutor from "../executors/StepExecutor";
 
 export type OperationInput =  { payload: string; stepDefinitionId?: UUID}
 

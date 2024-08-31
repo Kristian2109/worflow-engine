@@ -1,6 +1,7 @@
 import { randomUUID, UUID } from "crypto";
 import WorkflowDefinition from "../../workflowDefinition/definitions/WorkflowDefinition";
 import StepExecutor from "./StepExecutor";
+import ExecutionState from "../state/ExecutionState";
 
 export default class WorkflowExecutor {
   public executionStepsByDefinitionId: Map<UUID, StepExecutor> = new Map();
@@ -9,6 +10,7 @@ export default class WorkflowExecutor {
   constructor(
     public id: UUID,
     private workflowDefinition: WorkflowDefinition,
+    private state: ExecutionState,
   ) {
     this.workflowDefinition.getFirstStepIds.forEach((definitionStepId) => {
       const firstExecutionStep = this.buildStepExecution(definitionStepId);

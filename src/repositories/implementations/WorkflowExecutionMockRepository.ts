@@ -1,6 +1,6 @@
 import { randomUUID, UUID } from "crypto";
 import WorkflowDefinition from "../../workflowDefinition/definitions/WorkflowDefinition";
-import WorkflowExecutor from "../../workflowExecution/execution/WorkflowExecutor";
+import WorkflowExecutor from "../../workflowExecution/executors/WorkflowExecutor";
 import WorkflowExecutionRepository from "../interfaces/WorkflowExecutionRepository";
 
 export default class WorkflowExecutionMockRepository implements WorkflowExecutionRepository {
