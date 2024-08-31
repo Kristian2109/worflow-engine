@@ -1,12 +1,14 @@
+import { UUID } from "crypto";
+
 export default class ExecutionState {
-  public get workflowDefinitionId(): number {
+  public get workflowDefinitionId(): UUID {
     return this._workflowDefinitionId;
   }
-  public get id(): number {
+  public get id(): UUID {
     return this._id;
   }
   constructor(
-    private readonly _id: number,
-    private readonly _workflowDefinitionId: number,
+    private readonly _id: UUID,
+    private readonly _workflowDefinitionId: UUID,
   ) {}
 }
